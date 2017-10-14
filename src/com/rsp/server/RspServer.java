@@ -7,10 +7,22 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class RspServer {
+    private static ServerSocket serverSocket;
+
     public static void main(String[] args) {
         RspServer server = new RspServer();
         server.running();
     }
+
+    public RspServer() {
+        int port = 3000;
+        try {
+            this.serverSocket = new ServerSocket(port);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void running(){
         ServerSocket server = null;
         Socket socket = null;
@@ -23,12 +35,10 @@ public class RspServer {
         OutputStreamWriter osw = null;
         BufferedWriter bw = null;
 
-        int port = 3000;
-//        while(true){
+        while(true){
             try{
-                server = new ServerSocket(port);
                 System.out.println("================ CONNECTING ... =================");
-                socket = server.accept();
+                socket = this.serverSocket.accept();
                 System.out.println(String.format("============= CONNECTED FROM %s / %s ================", socket.getInetAddress(), getTime()));
 
                 is = socket.getInputStream();
@@ -56,14 +66,12 @@ public class RspServer {
                     br.close();
                     isr.close();
                     is.close();
-
-                    socket.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }
-//    }
+    }
     static String getTime(){
         SimpleDateFormat sdf = new SimpleDateFormat("[hh:mm:ss]");
         return sdf.format(new Date());
