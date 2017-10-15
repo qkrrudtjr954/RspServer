@@ -5,7 +5,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Scanner;
 
 public class RspServer {
     private static ServerSocket serverSocket;
@@ -25,9 +24,6 @@ public class RspServer {
     }
 
     public void running(){
-        ServerSocket server = null;
-        Socket socket = null;
-
         InputStream is = null;
         InputStreamReader isr = null;
         BufferedReader br = null;
@@ -39,7 +35,7 @@ public class RspServer {
         while(true){
             try{
                 System.out.println("================ CONNECTING ... =================");
-                socket = this.serverSocket.accept();
+                Socket socket = this.serverSocket.accept();
                 System.out.println(String.format("============= CONNECTED FROM %s / %s ================", socket.getInetAddress(), getTime()));
 
                 is = socket.getInputStream();
