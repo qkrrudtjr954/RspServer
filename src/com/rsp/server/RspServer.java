@@ -5,6 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Scanner;
 
 public class RspServer {
     private static ServerSocket serverSocket;
@@ -45,15 +46,14 @@ public class RspServer {
                 isr = new InputStreamReader(is);
                 br = new BufferedReader(isr);
 
-                int result = br.read();
-                System.out.println("from client" + result);
-                result = 100;
+                int clientResult = br.read();
+                String finalResult = rspLogic(clientResult);
 
                 os = socket.getOutputStream();
                 osw = new OutputStreamWriter(os);
                 bw = new BufferedWriter(osw);
 
-                bw.write(String.valueOf(result)+"(from server)");
+                bw.write(finalResult+"(Response from server)");
                 bw.flush();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -75,5 +75,25 @@ public class RspServer {
     static String getTime(){
         SimpleDateFormat sdf = new SimpleDateFormat("[hh:mm:ss]");
         return sdf.format(new Date());
+    }
+    private String rspLogic(int clientResult){
+        int serverResult = (int)(Math.random()*3) + 1;
+        String finalResult = "";
+
+        System.out.println(String.format("Client: %s vs Server: %s", clientResult, serverResult));
+        if(clientResult<1 || clientResult>3){
+            finalResult = "Wrong Input! (rock:1 cissors:2 paper:3)";
+        }else{
+            int result = clientResult - serverResult;
+            if(result == -2 || result == 1){
+                finalResult = "The winner is Client!";
+            }else if (result == -1 || result == 2){
+                finalResult = "The winner is Server!";
+            }else{
+                finalResult = "Draw .. try again!";
+            }
+        }
+        System.out.println(finalResult);
+        return finalResult;
     }
 }
